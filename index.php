@@ -169,6 +169,7 @@ foreach ($htm_files as $book => $htm_file) {
 
 $host = 'localhost'; // адрес сервера
 $database = "bible_test"; // имя базы данных
+//$database = "host1382121_bible"; // имя базы данных
 $user = 'root'; // имя пользователя
 $password = ''; // пароль
 
