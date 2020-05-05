@@ -147,7 +147,15 @@ foreach ($htm_files as $book => $htm_file) {
             continue;
         }
         if ($continue && $chapter > 0) {
-            if (preg_match('/<p>(\d+)-(\d+) (.*)/', $line, $matches)) {
+            if (preg_match('/<p>(\d+)–(\d+) (.*)/', $line, $matches)) {
+                $verse1 = $matches[1];
+                $verse2 = $matches[2];
+                $text = $matches[3];
+                foreach (range($verse1, $verse2) as $number) {
+                    $arr[$interpretation_id][$book][$chapter - 1][$number] = $text;
+                }
+//echo 'verse12='.$verse1.'-'.$verse2.'('.$text.')';
+            } else if (preg_match('/<p>(\d+)-(\d+) (.*)/', $line, $matches)) {
                 $verse1 = $matches[1];
                 $verse2 = $matches[2];
                 $text = $matches[3];
@@ -168,8 +176,8 @@ foreach ($htm_files as $book => $htm_file) {
 
 
 $host = 'localhost'; // адрес сервера
-$database = "bible_test"; // имя базы данных
-//$database = "host1382121_bible"; // имя базы данных
+//$database = "bible_test"; // имя базы данных
+$database = "host1382121_bible"; // имя базы данных
 $user = 'root'; // имя пользователя
 $password = ''; // пароль
 
@@ -188,12 +196,14 @@ foreach ($arr as $interpretation => $v1) {
         foreach ($v2 as $chapter_id => $v3) {
             foreach ($v3 as $verse_id => $text) {
                 $book_id = $book + 1;
+                $text=str_replace("'", '"', $text);
 //echo '<br>$interpretation_id='.$interpretation_id.'$book_id='.$book_id.'$chapter_id='.$chapter_id.'$verse_id'.$verse_id.'$text=('.$text.')';
                 $sql = "INSERT INTO interpretations (avtor_id,book_id,chapter_id,verse_id,text) VALUES ('$interpretation', '$book_id', '$chapter_id','$verse_id','$text')";
                 if (mysqli_query($link, $sql)) {
                     echo "New record created successfully";
                 } else {
                     echo "Error: " . $sql . "<br>" . mysqli_error($link);
+                    $error_arr[$interpretation][$book][$chapter_id][$verse_id]="Error: " . $sql . "<br>" . mysqli_error($link);
                 }
             }
         }
@@ -201,5 +211,7 @@ foreach ($arr as $interpretation => $v1) {
 }
 // закрываем подключение
 mysqli_close($link);
+
+echo '<pre>';print_r($error_arr);echo '</pre>';
 
 ?>
