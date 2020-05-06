@@ -60,6 +60,7 @@ foreach ($htm_files as $book => $htm_file) {
     }
 }
 //echo '<pre>';print_r($arr);echo '</pre>';
+$htm_files = [];
 $interpretation_id = 2;
 $interpretation[$interpretation_id] = 'Tolkovanie_A_P_Lopukhina';
 $htm_files[0] = '1Co.htm';
@@ -172,9 +173,76 @@ foreach ($htm_files as $book => $htm_file) {
         }
     }
 }
+
 //echo '<pre>';print_r($arr);echo '</pre>';
+$htm_files = [];
+$interpretation_id = 3;
+$interpretation[$interpretation_id] = 'Efrem_Sirin';
+$htm_files[0] = '1Co.htm';
+$htm_files[1] = '1The.htm';
+$htm_files[2] = '1Ti.htm';
+$htm_files[3] = '2Co.htm';
+$htm_files[4] = '2The.htm';
+$htm_files[5] = '2Ti.htm';
+$htm_files[6] = 'Am.htm';
+$htm_files[7] = 'Col.htm';
+$htm_files[8] = 'Dan.htm';
+$htm_files[9] = 'De.htm';
+$htm_files[10] = 'Eph.htm';
+$htm_files[11] = 'Ex.htm';
+$htm_files[12] = 'Ezek.htm';
+$htm_files[13] = 'Ga.htm';
+$htm_files[14] = 'Ge.htm';
+$htm_files[15] = 'He.htm';
+$htm_files[16] = 'Hos.htm';
+$htm_files[17] = 'Is.htm';
+$htm_files[18] = 'Jer.htm';
+$htm_files[19] = 'Jl.htm';
+$htm_files[20] = 'Lam.htm';
+$htm_files[21] = 'Le.htm';
+$htm_files[22] = 'Ma.htm';
+$htm_files[23] = 'Mic.htm';
+$htm_files[24] = 'Nu.htm';
+$htm_files[25] = 'Ob.htm';
+$htm_files[26] = 'Php.htm';
+$htm_files[27] = 'Ro.htm';
+$htm_files[28] = 'Tit.htm';
+$htm_files[29] = 'Za.htm';
 
-
+$continue = false;
+foreach ($htm_files as $book => $htm_file) {
+    $filename = "Efrem_Sirin/$htm_file";
+    $lines = file($filename);
+    $chapter = 0;
+    foreach ($lines as $idx => $line) {
+        $line = iconv('Windows-1251', 'UTF-8', $line);
+        if (preg_match('/<h2>([А-Яа-я\s]*)/', $line, $matches)) {
+//trim($matches[1]);
+//echo "<br>$book=$chapter=".$matches[1];
+            $chapter++;
+            $continue = true;
+            $verse = 0;
+            continue;
+        }
+        if ($continue && $chapter > 1) {
+                if (preg_match('/<p>(\d+)-(\d+) (.*)/', $line, $matches)) {
+                $verse1 = $matches[1];
+                $verse2 = $matches[2];
+                $text = $matches[3];
+                foreach (range($verse1, $verse2) as $number) {
+                    $arr[$interpretation_id][$book][$chapter - 1][$number] = $text;
+                }
+//echo 'verse12='.$verse1.'-'.$verse2.'('.$text.')';
+            } else if (preg_match('/<p>(\d+) (.*)/', $line, $matches)) {
+                $verse = $matches[1];
+                $text = $matches[2];
+                $arr[$interpretation_id][$book][$chapter - 1][$verse] = $text;
+//echo 'verse='.$verse.'('.$text.')';
+            }
+        }
+    }
+}
+//echo '<pre>';print_r($arr);echo '</pre>';
 $host = 'localhost'; // адрес сервера
 //$database = "bible_test"; // имя базы данных
 $database = "host1382121_bible"; // имя базы данных
