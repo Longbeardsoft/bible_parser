@@ -135,11 +135,13 @@ $htm_files[66] = 'Zep.htm';
 $continue = false;
 foreach ($htm_files as $book => $htm_file) {
     $filename = "Tolkovanie_A_P_Lopukhina/$htm_file";
+//$filename = "Tolkovanie_A_P_Lopukhina/Ruth.htm";
     $lines = file($filename);
     $chapter = 0;
     foreach ($lines as $idx => $line) {
         $line = iconv('Windows-1251', 'UTF-8', $line);
-        if (preg_match('/<h2>([\d]+)/', $line, $matches)) {
+        if (preg_match('/<h2>([\d]+)/', $line, $matches)||preg_match('/<h2>([А-Яа-я\s]*)/', $line, $matches)) {
+
 //trim($matches[1]);
 //echo "<br>$book=$chapter=".$matches[1];
             $chapter++;
@@ -148,7 +150,21 @@ foreach ($htm_files as $book => $htm_file) {
             continue;
         }
         if ($continue && $chapter > 0) {
-            if (preg_match('/<p>(\d+)–(\d+) (.*)/', $line, $matches)) {
+            if (preg_match('/<p>(\d+)-(\d+)(.\s+)(.*)/', $line, $matches)) {
+                $verse1 = $matches[1];
+                $verse2 = $matches[2];
+                $text = $matches[4];
+                foreach (range($verse1, $verse2) as $number) {
+                    $arr[$interpretation_id][$book][$chapter - 1][$number] = $text;
+                }
+//echo 'verse12='.$verse1.'-'.$verse2.'('.$text.')';
+            } else if (preg_match('/<p>(\d+)(.\s+)(.*)/', $line, $matches)) {
+                $verse = $matches[1];
+                $text = $matches[3];
+                $arr[$interpretation_id][$book][$chapter - 1][$verse] = $text;
+//echo 'verse='.$verse.'('.$text.')';
+            }
+            else if (preg_match('/<p>(\d+)–(\d+) (.*)/', $line, $matches)) {
                 $verse1 = $matches[1];
                 $verse2 = $matches[2];
                 $text = $matches[3];
@@ -213,7 +229,7 @@ $continue = false;
 foreach ($htm_files as $book => $htm_file) {
     $filename = "Efrem_Sirin/$htm_file";
     $lines = file($filename);
-    $chapter = 0;
+    $chapter = 1;
     foreach ($lines as $idx => $line) {
         $line = iconv('Windows-1251', 'UTF-8', $line);
         if (preg_match('/<h2>([А-Яа-я\s]*)/', $line, $matches)) {
