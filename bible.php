@@ -14,9 +14,9 @@ for ($id_book=1;$id_book<=77;$id_book++) {
         //$line = mb_convert_encoding($line, "utf-8");
         if (preg_match('/^=== ([0-9#]{1,3}) ===/', $line, $matches))
             $m = $matches[1];//{ var_dump($matches[1]);var_dump($chapter);echo '<br>';}
-        //if (strcasecmp($m, $chapter) == 0)
         for ($j = 1; $j <= $chapters; $j++) {
-        if (preg_match('/^([0-9#]{1,3})\s(\D+)/', $line, $matches)) {
+            if (strcasecmp($m, $j) == 0)
+                if (preg_match('/^([0-9#]{1,3})\s(\D+)/', $line, $matches)) {
             $numVerse[$i] = $matches[1];
             $textVerse[$i] = str_replace("_", " ", $matches[2]);
             $result[1][$id_book][$j][$numVerse[$i]]= $textVerse[$i];
@@ -31,9 +31,9 @@ for ($id_book=1;$id_book<=77;$id_book++) {
         //$line = mb_convert_encoding($line, "utf-8");
         if (preg_match('/^=== ([0-9#]{1,3}) ===/', $line, $matches))
             $m = $matches[1];//{ var_dump($matches[1]);var_dump($chapter);echo '<br>';}
- //       if (strcasecmp($m, $chapter) == 0)
         for ($j = 1; $j <= $chapters; $j++) {
-            if (preg_match('/^([0-9#]{1,3})\s(\D+)/', $line, $matches)) {
+            if (strcasecmp($m, $j) == 0)
+                if (preg_match('/^([0-9#]{1,3})\s(\D+)/', $line, $matches)) {
                 $numVerse[$i] = $matches[1];
                 $textVerse[$i] = str_replace("_", " ", $matches[2]);
                 $result[2][$id_book][$j][$numVerse[$i]] = $textVerse[$i];
