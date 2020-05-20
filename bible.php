@@ -26,7 +26,7 @@ for ($id_book=1;$id_book<=77;$id_book++) {
     }
     }
     $i = 0;
-    foreach ($lines as $line_num => $line) {
+    foreach ($lines_slavic as $line_num => $line) {
         $line = iconv('windows-1251', 'UTF-8', $line);
         //$line = mb_convert_encoding($line, "utf-8");
         if (preg_match('/^=== ([0-9#]{1,3}) ===/', $line, $matches))
